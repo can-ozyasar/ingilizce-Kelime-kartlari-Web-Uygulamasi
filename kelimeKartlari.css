@@ -73,3 +73,12 @@ body#bodyy {
 #biliyorumBtn:hover {
     box-shadow: 10px 8px 16px 0 rgba(101, 96, 205, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
+#ilerleme-text{
+font-size: 1rem;
+color: #333;
+background: #88c4eec9;
+padding: 10px;
+text-align: center;
+border-radius: 5px;
+}
