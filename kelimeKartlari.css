@@ -1,35 +1,58 @@
-*{
-border: 2px solid red;
+* {
+    border: 2px solid red;
 }
 
 
-.p-3{
-    margin: auto auto;
-    background: #000;
+
+body#bodyy {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+.card-container{
+    perspective: 100px;
+    perspective-origin: 50% 50%
 }
 
-.card{
-    margin:auto auto ;
-
+.card {
+    width: 300px;
+    height: 200px;
+        user-select: none; /* Metnin seçilmesini engeller */
+    position: relative;
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    transition: 0.3s;
+    transition: transform 0.4s ease, box-shadow 0.4s ease; /* Yumuşak geçişler */
     cursor: pointer;
     color: #333;
     font-family: 'Poppins', sans-serif;
     text-align: center;
-    border: 1px solid #ccc;
-    padding: 15px 15px;
-    
+    padding: 40px 40px;
+
 }
-.card-body{
+
+.card-body {
     padding: 10px;
 }
 
-.card-title{
-    font-size: 1.5rem;
+
+
+#card.left {
+    transform: translateX(-150px) rotate(-15deg) !important;
+    background-color: rgba(255, 0, 0, 0.1);
 }
 
-.card-text{
-    font-size: 1.3rem;
+#card.right {
+    transform: translateX(150px) rotate(15deg) !important;
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+.card:hover {
+    box-shadow: 10px 8px 16px 0 rgba(96, 189, 205, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.card-text {
+    font-size: 1.7rem;
 }
