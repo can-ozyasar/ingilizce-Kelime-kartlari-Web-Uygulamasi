@@ -6,7 +6,6 @@
 
 body#bodyy {
     overflow: hidden;
-    display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -14,13 +13,14 @@ body#bodyy {
 }
 .card-container{
     perspective: 100px;
-    perspective-origin: 50% 50%
+    perspective-origin: 50% 50%;
+    
 }
 
 .card {
     width: 300px;
     height: 200px;
-        user-select: none; /* Metnin seçilmesini engeller */
+    user-select: none; /* Metnin seçilmesini engeller */
     position: relative;
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -50,9 +50,29 @@ body#bodyy {
 }
 
 .card:hover {
-    box-shadow: 10px 8px 16px 0 rgba(96, 189, 205, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 10px 8px 16px 0 rgba(82, 216, 240, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .card-text {
     font-size: 1.7rem;
+}
+
+.buton-container {
+    display: flex;
+    padding: 15px;
+    color: #fff;
+    margin: 20px auto;
+    width: 100%;
+    justify-content: space-between;
+
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
+#bilmiyorumBtn:hover {
+    box-shadow: 10px 8px 16px 0 rgba(101, 96, 205, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#biliyorumBtn:hover {
+    box-shadow: 10px 8px 16px 0 rgba(101, 96, 205, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
