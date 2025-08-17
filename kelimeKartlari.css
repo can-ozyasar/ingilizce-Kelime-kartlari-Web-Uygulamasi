@@ -1,0 +1,35 @@
+*{
+border: 2px solid red;
+}
+
+
+.p-3{
+    margin: auto auto;
+    background: #000;
+}
+
+.card{
+    margin:auto auto ;
+
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition: 0.3s;
+    cursor: pointer;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 15px 15px;
+    
+}
+.card-body{
+    padding: 10px;
+}
+
+.card-title{
+    font-size: 1.5rem;
+}
+
+.card-text{
+    font-size: 1.3rem;
+}
