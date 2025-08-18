@@ -1,6 +1,5 @@
 // Kelime veritabanı - İngilizce ve Türkçe karşılıkları
 import { kelimeler } from './kelimeler.js';
-    
 
 
 // Oyun durumu değişkenleri
@@ -17,10 +16,14 @@ const biliyorumBtn = document.getElementById('biliyorumBtn');
 const bilmiyorumBtn = document.getElementById('bilmiyorumBtn');
 const ilerlemeTxt = document.getElementById('ilerleme-text');
 const ilerleme = document.getElementById('ilerleme');
+const tema = document.getElementById('navbar-brand');
+const body = document.body;
+const svg = document.getElementById('svg')
+
 
 
 // Sayfa yüklendiğinde başlat
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     ilkKelimeyiGoster();
     eventListenerlarEkle();
 });
@@ -29,25 +32,26 @@ document.addEventListener('DOMContentLoaded', function() {
 function eventListenerlarEkle() {
     // Karta tıklayınca çevir
     card.addEventListener('click', kartiCevir);
-    
+    tema.addEventListener('click', temaDegistir);
+
     // Biliyorum butonu
-    biliyorumBtn.addEventListener('click', function() {
+    biliyorumBtn.addEventListener('click', function () {
         kartAnimasyonu('right');
         setTimeout(() => {
             biliyorumIsle();
         }, 300);
     });
-    
+
     // Bilmiyorum butonu
-    bilmiyorumBtn.addEventListener('click', function() {
+    bilmiyorumBtn.addEventListener('click', function () {
         kartAnimasyonu('left');
         setTimeout(() => {
             bilmiyorumIsle();
         }, 300);
     });
-    
+
     // Klavye desteği
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'ArrowRight' || e.key === 'Enter') {
             biliyorumBtn.click();
         } else if (e.key === 'ArrowLeft' || e.key === ' ') {
@@ -57,6 +61,15 @@ function eventListenerlarEkle() {
         }
     });
 }
+
+function temaDegistir() {
+   body.classList.toggle('bg-dark');
+   
+}
+
+
+
+
 
 // İlk kelimeyi göster
 function ilkKelimeyiGoster() {
@@ -71,11 +84,11 @@ function ilkKelimeyiGoster() {
 
 // Kartı çevir (İngilizce ↔ Türkçe)
 function kartiCevir() {
-    card.style.transform   = 'rotateY(4deg)';
+    card.style.transform = 'rotateY(4deg)';
     //card.style   = 'transform:rotateY(100deg);@media (max-width: 768px) {transform:rotateY(1deg);}';
 
-  
-    
+
+
 
     setTimeout(() => {
         if (kartDurumu === "ingilizce") {
@@ -85,15 +98,15 @@ function kartiCevir() {
             kartDurumu = "ingilizce";
             cardText.textContent = aktifKelimeler[mevcutKelimeIndex].ingilizce;
         }
-        
+
         card.style.transform = 'rotateY(0deg)';
     }, 200);
-} 
+}
 
 // Kart animasyonu (sağa veya sola kaydırma)
 function kartAnimasyonu(yon) {
     card.classList.add(yon);
-    
+
     // Animasyon sonrası temizleme
     setTimeout(() => {
         card.classList.remove(yon);
@@ -115,13 +128,13 @@ function biliyorumIsle() {
     if (!ogrenilenler.find(k => k.ingilizce === mevcutKelime.ingilizce)) {
         ogrenilenler.push(mevcutKelime);
     }
-    
+
     // Kelimeyi aktif listeden çıkar
     aktifKelimeler.splice(mevcutKelimeIndex, 1);
-    
+
     // Bir sonraki kelimeye geç
     sonrakiKelime();
-    
+
     console.log(`Öğrenilen: ${mevcutKelime.ingilizce} - ${mevcutKelime.turkce}`);
     durumGoster();
 }
@@ -130,39 +143,39 @@ function biliyorumIsle() {
 function bilmiyorumIsle() {
     // Kelimeyi bilmiyorum listesine ekle
     const mevcutKelime = aktifKelimeler[mevcutKelimeIndex];
-    
+
     if (!bilmiyorumListesi.find(k => k.ingilizce === mevcutKelime.ingilizce)) {
         bilmiyorumListesi.push(mevcutKelime);
     }
-    
+
     // Kelimeyi aktif listeden çıkar
     aktifKelimeler.splice(mevcutKelimeIndex, 1);
-    
+
     // Kelimeyi listenin sonuna ekle (tekrar gösterilmek üzere)
     aktifKelimeler.push(mevcutKelime);
-    
+
     // Bir sonraki kelimeye geç
     sonrakiKelime();
-    
+
     console.log(`Tekrar edilecek: ${mevcutKelime.ingilizce} - ${mevcutKelime.turkce}`);
-   // durumGoster();
+    // durumGoster();
 }
 
 // Sonraki kelimeye geç
 function sonrakiKelime() {
-    const{toplam ,ogrenilenYuzde,uzunluk}  =istatistikleriGoster()
-   ilerlemeTxt.textContent=`İlerleme: %${ogrenilenYuzde} (${ogrenilenler.length}/${toplam})`
-  
+    const { toplam, ogrenilenYuzde, uzunluk } = istatistikleriGoster()
+    ilerlemeTxt.textContent = `İlerleme: %${ogrenilenYuzde} (${ogrenilenler.length}/${toplam})`
+
     if (aktifKelimeler.length === 0) {
         oyunBitti();
         return;
     }
-    
+
     // Index kontrolü
     if (mevcutKelimeIndex >= aktifKelimeler.length) {
         mevcutKelimeIndex = 0;
     }
-    
+
     // Yeni kelimeyi göster
     kartDurumu = "ingilizce";
     cardText.textContent = aktifKelimeler[mevcutKelimeIndex].ingilizce;
@@ -190,7 +203,7 @@ function oyunBitti() {
             </button>
         </div>
     `;
-    
+
     // Butonları gizle
     biliyorumBtn.style.display = 'none';
     bilmiyorumBtn.style.display = 'none';
@@ -203,13 +216,13 @@ function oyunuYenidenBaslat() {
     bilmiyorumListesi = [];
     ogrenilenler = [];
     aktifKelimeler = [...kelimeler];
-    const{toplam ,ogrenilenYuzde,uzunluk}  =istatistikleriGoster()
-   ilerlemeTxt.textContent=`İlerleme: %${ogrenilenYuzde} (${ogrenilenler.length}/${toplam})`
-    
+    const { toplam, ogrenilenYuzde, uzunluk } = istatistikleriGoster()
+    ilerlemeTxt.textContent = `İlerleme: %${ogrenilenYuzde} (${ogrenilenler.length}/${toplam})`
+
     // Butonları göster
     biliyorumBtn.style.display = 'inline-block';
     bilmiyorumBtn.style.display = 'inline-block';
-    
+
     ilkKelimeyiGoster();
     console.log("Oyun yeniden başlatıldı!");
 }
@@ -226,11 +239,11 @@ function kelimeleriKaristir() {
 function istatistikleriGoster() {
     const toplam = kelimeler.length;
     const ogrenilenYuzde = Math.round((ogrenilenler.length / toplam) * 100);
-    
-   // console.log(`İlerleme: %${ogrenilenYuzde} (${ogrenilenler.length}/${toplam})`);
+
+    // console.log(`İlerleme: %${ogrenilenYuzde} (${ogrenilenler.length}/${toplam})`);
     return {
-        toplam:toplam,
-        ogrenilenYuzde:ogrenilenYuzde,
+        toplam: toplam,
+        ogrenilenYuzde: ogrenilenYuzde,
         uzunluk: ogrenilenler.length,
     };
 }

@@ -1,25 +1,26 @@
-
-
-body#bodyy {
+body {
     overflow: hidden;
     justify-content: center;
     align-items: center;
     margin: 0;
 }
-.card-container{
+
+.card-container {
     perspective: 100px;
     perspective-origin: 50% 50%;
-    
+
 }
 
 .card {
     width: 300px;
     height: 200px;
-    user-select: none; /* Metnin seçilmesini engeller */
+    user-select: none;
+    /* Metnin seçilmesini engeller */
     position: relative;
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    transition: transform 0.4s ease, box-shadow 0.4s ease; /* Yumuşak geçişler */
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    /* Yumuşak geçişler */
     cursor: pointer;
     font-family: 'Poppins', sans-serif;
     text-align: center;
@@ -58,7 +59,6 @@ body#bodyy {
     margin: 20px auto;
     width: 100%;
     justify-content: space-between;
-
     border-radius: 5px;
     cursor: pointer;
 
@@ -67,45 +67,65 @@ body#bodyy {
 #bilmiyorumBtn:hover {
     box-shadow: 10px 8px 16px 0 rgba(101, 96, 205, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
 #biliyorumBtn:hover {
     box-shadow: 10px 8px 16px 0 rgba(101, 96, 205, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-#ilerleme-text{
-font-size: 1rem;
-color: #333;
-background: #88c4eec9;
-padding: 10px;
-text-align: center;
-border-radius: 5px;
+#ilerleme-text {
+    font-size: 1rem;
+    color: #333;
+    background: #88c4eec9;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
 }
+body.bg-dark {
+    background-color: #212529;
+    color: #f8f9fa;
+}
+
+
 
 
 @media (max-width: 768px) {
-    
-.card-container{
-    width: 100%;
-}
-.card{
-    
-    width: 80%;
-    margin: auto;
-    padding :50px 50px;
-    margin-bottom: 50px;
-   
-}
-#ilerleme-text{
-    width: 80%;
-    margin: auto;
-}
 
-#card.left {
-    transform: translateX(-15px) rotate(-5deg) !important;
-    background-color: rgba(255, 0, 0, 0.9);
-}
+    /* .bi bi-toggle-on{
+margin-bottom: 150px;
 
-#card.right {
-    transform: translateX(15px) rotate(5deg) !important;
-    background-color: rgba(33, 240, 33, 0.1);
-}
+} */
+    .card-container {
+        margin-top: 220px;
+
+        width: 100%;
+    }
+
+    .card {
+
+        width: 80%;
+        margin: auto;
+        padding: 50px 50px;
+        margin-bottom: 50px;
+
+    }
+
+    #ilerleme-text {
+        width: 80%;
+        margin: auto;
+    }
+
+    #card.left {
+        transform: translateX(-15px) rotate(-5deg) !important;
+        background-color: rgba(255, 0, 0, 0.9);
+    }
+
+    #card.right {
+        transform: translateX(15px) rotate(5deg) !important;
+        background-color: rgba(33, 240, 33, 0.1);
+    }
+
+    .gunes{
+        padding-left: 100px;
+        
+    }
 }
