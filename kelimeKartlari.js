@@ -18,9 +18,22 @@ const ilerlemeTxt = document.getElementById('ilerleme-text');
 const ilerleme = document.getElementById('ilerleme');
 const tema = document.getElementById('navbar-brand');
 const body = document.body;
-const svg = document.getElementById('svg')
+
+const buton1=document.getElementById('btn-1')
+const buton2=document.getElementById('btn-2')
+
+const buton3=document.getElementById('btn-3')
+
+const buton4=document.getElementById('btn-4')
+
+const buton5=document.getElementById('btn-5')
 
 
+
+
+function kaynakDegistir(){
+    
+}
 
 // Sayfa yüklendiğinde başlat
 document.addEventListener('DOMContentLoaded', function () {
@@ -33,6 +46,11 @@ function eventListenerlarEkle() {
     // Karta tıklayınca çevir
     card.addEventListener('click', kartiCevir);
     tema.addEventListener('click', temaDegistir);
+    buton1.addEventListener('click', kaynakDegistir);
+    buton2.addEventListener('click', kaynakDegistir);
+    buton2.addEventListener('click', kaynakDegistir);
+    buton4.addEventListener('click', kaynakDegistir);
+    buton5.addEventListener('click', kaynakDegistir);
 
     // Biliyorum butonu
     biliyorumBtn.addEventListener('click', function () {

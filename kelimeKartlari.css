@@ -1,5 +1,4 @@
 body {
-    overflow: hidden;
     justify-content: center;
     align-items: center;
     margin: 0;
@@ -94,6 +93,11 @@ body.bg-dark {
 margin-bottom: 150px;
 
 } */
+ .kelimePaneli{
+    text-align: center;
+    margin-top: 150px;
+    padding: 50px ;
+ }
     .card-container {
         margin-top: 220px;
 
@@ -127,5 +131,9 @@ margin-bottom: 150px;
     .gunes{
         padding-left: 100px;
         
+    }
+    .kelimePaneli button{
+        width: 50px;
+
     }
 }
