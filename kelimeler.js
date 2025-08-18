@@ -1,5 +1,5 @@
 
-[
+export const kelimeler=[
   {
     "ingilizce": "a",
     "turkce": "bir"

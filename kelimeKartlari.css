@@ -1,11 +1,9 @@
-
-
+*{border: red solid 1px}
 
 body#bodyy {
     overflow: hidden;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
     margin: 0;
 }
 .card-container{
@@ -23,7 +21,6 @@ body#bodyy {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     transition: transform 0.4s ease, box-shadow 0.4s ease; /* Yumuşak geçişler */
     cursor: pointer;
-    color: #333;
     font-family: 'Poppins', sans-serif;
     text-align: center;
     padding: 40px 40px;
@@ -100,5 +97,15 @@ border-radius: 5px;
 #ilerleme-text{
     width: 80%;
     margin: auto;
+}
+
+#card.left {
+    transform: translateX(-15px) rotate(-5deg) !important;
+    background-color: rgba(255, 0, 0, 0.9);
+}
+
+#card.right {
+    transform: translateX(15px) rotate(5deg) !important;
+    background-color: rgba(33, 240, 33, 0.1);
 }
 }
