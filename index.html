@@ -45,7 +45,27 @@
     </nav>
 
     <div class="main-content">
-        <div class="kelimePaneli">
+        
+
+        <div class="ilerleme" id="ilerleme">
+            <p id="ilerleme-text">İlerleme: %0 (0/0)</p>
+        </div>
+
+        <div class="card-container">
+            <div class="card" id="card">
+                <div class="card-body" id="card-body">
+                    <p class="card-text" id="card_text">Başlamak için bir bölüm seçin</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="buton-container">
+            <button class="btn btn-danger btn-custom" id="bilmiyorumBtn">Bilmiyorum</button>
+            <button class="btn btn-success btn-custom" id="biliyorumBtn">Biliyorum</button>
+        </div>
+    </div>
+
+    <div class="kelimePaneli">
             <p>Bölüm Seçin</p>
             <button type="button" id="btn-1" class="btn btn-outline-primary active">1</button>
             <button type="button" id="btn-2" class="btn btn-outline-primary">2</button>
@@ -81,9 +101,9 @@
             </h4>
 
             <div class="kelime-info">
-                <strong>📋 Format:</strong> Her satıra bir kelime yazın. Format: <code>ingilizce,turkce</code><br>
-                <strong>📝 Örnek:</strong> <code>hello,merhaba</code> veya <code>apple,elma</code><br>
-                <strong>⚠️ Not:</strong> Virgül ile ayırın, arada boşluk bırakmamaya dikkat edin.
+                <strong> Format:</strong> Her satıra bir kelime yazın. Format: <code>ingilizce,turkce</code><br>
+                <strong> Örnek:</strong> <code>hello,merhaba</code><br>
+                <strong> Not:</strong> Virgül ile ayırın, arada boşluk bırakmamaya dikkat edin.
             </div>
 
             <div class="kelime-input-area">
@@ -126,24 +146,6 @@
                 </button>
             </div>
         </div>
-
-        <div class="ilerleme" id="ilerleme">
-            <p id="ilerleme-text">İlerleme: %0 (0/0)</p>
-        </div>
-
-        <div class="card-container">
-            <div class="card" id="card">
-                <div class="card-body" id="card-body">
-                    <p class="card-text" id="card_text">Başlamak için bir bölüm seçin</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="buton-container">
-            <button class="btn btn-danger btn-custom" id="bilmiyorumBtn">Bilmiyorum</button>
-            <button class="btn btn-success btn-custom" id="biliyorumBtn">Biliyorum</button>
-        </div>
-    </div>
 
     <script type="module" src="kelimeKartlari.js"></script>
     

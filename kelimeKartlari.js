@@ -2,9 +2,7 @@
 
         const tumKelimeler = kelimeler;
 
-        // ========== KELİME VERİTABANI - BURAYA KELİMELERİ YAZIN ==========
-
-        // ================================================================
+        
 
         // Oyun durumu değişkenleri
         let mevcutBolum = 1;
@@ -295,15 +293,13 @@
         }
 
         function kelimeleriKaristir() {
-            for (let i = aktifKelimeler.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [aktifKelimeler[i], aktifKelimeler[j]] = [aktifKelimeler[j], aktifKelimeler[i]];
-            }
+            // for (let i = aktifKelimeler.length - 1; i > 0; i--) {
+            //     const j = Math.floor(Math.random() * (i + 1));
+            //     [aktifKelimeler[i], aktifKelimeler[j]] = [aktifKelimeler[j], aktifKelimeler[i]];
+            // }
         }
 
-        // ===================================================
-        // YENİ EKLENEN FONKSİYONLAR
-        // ===================================================
+       
 
         // Kelime yükleme panelini aç/kapat
         function kelimeYuklePaneliniAc() {
@@ -421,9 +417,8 @@
             }
         }
 
-        // ===================================================
-        // TEMA FONKSİYONLARI
-        // ===================================================
+       
+
         function temaDegistir() {
             const mevcutTema = body.getAttribute('data-theme');
             const yeniTema = mevcutTema === 'dark' ? 'light' : 'dark';
