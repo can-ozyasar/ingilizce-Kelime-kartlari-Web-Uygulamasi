@@ -45,7 +45,7 @@
     </nav>
 
     <div class="main-content">
-        
+
 
         <div class="ilerleme" id="ilerleme">
             <p id="ilerleme-text">İlerleme: %0 (0/0)</p>
@@ -58,97 +58,108 @@
                 </div>
             </div>
         </div>
+        <div class="actions">
+            <div class="buton-container">
+                <button class="btn btn-danger btn-custom" id="bilmiyorumBtn">Bilmiyorum</button>
+                <button class="btn btn-success btn-custom" id="biliyorumBtn">Biliyorum</button>
 
-        <div class="buton-container">
-            <button class="btn btn-danger btn-custom" id="bilmiyorumBtn">Bilmiyorum</button>
-            <button class="btn btn-success btn-custom" id="biliyorumBtn">Biliyorum</button>
+            </div>
+
+            <div class="favlama" id="favlama"> <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                    class="bi bi-star" viewBox="0 0 16 16">
+                    <path
+                        d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z" />
+                </svg>
+            </div>
         </div>
     </div>
 
+
+
     <div class="kelimePaneli">
-            <p>Bölüm Seçin</p>
-            <button type="button" id="btn-1" class="btn btn-outline-primary active">1</button>
-            <button type="button" id="btn-2" class="btn btn-outline-primary">2</button>
-            <button type="button" id="btn-3" class="btn btn-outline-primary">3</button>
-            <button type="button" id="btn-4" class="btn btn-outline-primary">4</button>
-            <button type="button" id="btn-5" class="btn btn-outline-primary">5</button>
-            <button type="button" id="btn-6" class="btn btn-outline-success btn-custom-words">
+        <p>Bölüm Seçin</p>
+        <button type="button" id="btn-1" class="btn btn-outline-primary active">1</button>
+        <button type="button" id="btn-2" class="btn btn-outline-primary">2</button>
+        <button type="button" id="btn-3" class="btn btn-outline-primary">3</button>
+        <button type="button" id="btn-4" class="btn btn-outline-primary">4</button>
+        <button type="button" id="btn-5" class="btn btn-outline-primary">5</button>
+        <button type="button" id="btn-6" class="btn btn-outline-success btn-custom-words">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-plus-circle me-1" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path
+                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+            </svg>
+            Özel
+        </button>
+        <div class="mt-2">
+            <button type="button" id="kelime-yukle-btn" class="btn btn-sm btn-outline-info">
+                📝 Kelime Yükle
+            </button>
+        </div>
+    </div>
+
+    <div class="kelime-yukle-panel" id="kelime-yukle-panel">
+        <h4>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-upload me-2"
+                viewBox="0 0 16 16">
+                <path
+                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                <path
+                    d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
+            </svg>
+            Özel Kelimelerinizi Yükleyin
+        </h4>
+
+        <div class="kelime-info">
+            <strong> Format:</strong> Her satıra bir kelime yazın. Format: <code>ingilizce,turkce</code><br>
+            <strong> Örnek:</strong> <code>hello,merhaba</code><br>
+            <strong> Not:</strong> Virgül ile ayırın, arada boşluk bırakmamaya dikkat edin.
+        </div>
+
+        <div class="kelime-input-area">
+            <textarea id="kelime-textarea" class="kelime-textarea"
+                placeholder="hello,merhaba&#10;world,dünya&#10;apple,elma&#10;book,kitap&#10;&#10;Kelimelerinizi buraya yazın..."></textarea>
+        </div>
+
+        <div class="kelime-sayisi" id="kelime-sayisi">
+            Henüz kelime eklenmedi
+        </div>
+
+        <div class="kelime-actions">
+            <button class="btn-kelime-action btn-yukle" id="btn-yukle">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-plus-circle me-1" viewBox="0 0 16 16">
+                    class="bi bi-check-circle me-1" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                     <path
-                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
                 </svg>
-                Özel
+                Yükle
             </button>
-            <div class="mt-2">
-                <button type="button" id="kelime-yukle-btn" class="btn btn-sm btn-outline-info">
-                    📝 Kelime Yükle
-                </button>
-            </div>
-        </div>
-
-        <div class="kelime-yukle-panel" id="kelime-yukle-panel">
-            <h4>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                    class="bi bi-upload me-2" viewBox="0 0 16 16">
+            <button class="btn-kelime-action btn-temizle" id="btn-temizle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-trash me-1" viewBox="0 0 16 16">
                     <path
-                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
-                    <path
-                        d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
+                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                    <path fill-rule="evenodd"
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
                 </svg>
-                Özel Kelimelerinizi Yükleyin
-            </h4>
-
-            <div class="kelime-info">
-                <strong> Format:</strong> Her satıra bir kelime yazın. Format: <code>ingilizce,turkce</code><br>
-                <strong> Örnek:</strong> <code>hello,merhaba</code><br>
-                <strong> Not:</strong> Virgül ile ayırın, arada boşluk bırakmamaya dikkat edin.
-            </div>
-
-            <div class="kelime-input-area">
-                <textarea id="kelime-textarea" class="kelime-textarea"
-                    placeholder="hello,merhaba&#10;world,dünya&#10;apple,elma&#10;book,kitap&#10;&#10;Kelimelerinizi buraya yazın..."></textarea>
-            </div>
-
-            <div class="kelime-sayisi" id="kelime-sayisi">
-                Henüz kelime eklenmedi
-            </div>
-
-            <div class="kelime-actions">
-                <button class="btn-kelime-action btn-yukle" id="btn-yukle">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-check-circle me-1" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                        <path
-                            d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
-                    </svg>
-                    Yükle
-                </button>
-                <button class="btn-kelime-action btn-temizle" id="btn-temizle">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-trash me-1" viewBox="0 0 16 16">
-                        <path
-                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                        <path fill-rule="evenodd"
-                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                    </svg>
-                    Temizle
-                </button>
-                <button class="btn-kelime-action btn-kapat" id="btn-kapat">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-x-circle me-1" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                        <path
-                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                    </svg>
-                    Kapat
-                </button>
-            </div>
+                Temizle
+            </button>
+            <button class="btn-kelime-action btn-kapat" id="btn-kapat">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-x-circle me-1" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path
+                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                </svg>
+                Kapat
+            </button>
         </div>
+    </div>
 
     <script type="module" src="kelimeKartlari.js"></script>
-    
+
 </body>
 
 </html>
