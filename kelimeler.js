@@ -1550,7 +1550,7 @@ export const kelimeler=[
   },
   {
     "ingilizce": "hit",
-    "turkce": "çarmak"
+    "turkce": "vurmak"
   },
   {
     "ingilizce": "hold",
