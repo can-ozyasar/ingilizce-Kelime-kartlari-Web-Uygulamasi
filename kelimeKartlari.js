@@ -262,6 +262,7 @@ function oyunBitti() {
         return;
     }
     const bolumAdi = mevcutBolum === 6 ? 'Favori Kelimeleriniz' : `Bölüm ${mevcutBolum}`;
+    okunusTxt.textContent = '';
     cardText.innerHTML = `
         <div class="finish-container">
             <h3>🎉 Tebrikler!</h3>
@@ -278,6 +279,7 @@ function oyunBitti() {
 }
 
 function oyunuYenidenBaslat() {
+    console.log('Oyunu yeniden başlatılıyor...');
     oyunuSifirla();
 }
 
