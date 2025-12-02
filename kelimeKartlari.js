@@ -1,4 +1,4 @@
-import { kelimeler } from "./kelimeler.js";
+import { kelimeler } from "./kelimelerOkunuslu.js";
 
 const tumKelimeler = kelimeler;
 
@@ -35,6 +35,7 @@ const btnYukle = document.getElementById('btn-yukle');
 const btnTemizle = document.getElementById('btn-temizle');
 const btnKapat = document.getElementById('btn-kapat');
 const favlama = document.getElementById("favlama");
+const okunusTxt = document.getElementById("card_pronunciation");
 
 const bolumBtnlari = [
     document.getElementById('btn-1'),
@@ -162,6 +163,7 @@ function ilkKelimeyiGoster() {
         const kelime = aktifKelimeler[mevcutKelimeIndex];
         kartDurumu = "ingilizce";
         cardText.textContent = kelime.ingilizce;
+        okunusTxt.textContent = kelime.okunus || '';
         kartRenginiSifirla();
         ilerlemeyiGuncelle();
         favoriIkonunuGuncelle(); 
@@ -178,9 +180,12 @@ function kartiCevir() {
         if (kartDurumu === "ingilizce") {
             kartDurumu = "turkce";
             cardText.textContent = aktifKelimeler[mevcutKelimeIndex].turkce;
+            okunusTxt.textContent = '';
         } else {
             kartDurumu = "ingilizce";
             cardText.textContent = aktifKelimeler[mevcutKelimeIndex].ingilizce;
+            okunusTxt.textContent = aktifKelimeler[mevcutKelimeIndex].okunus || '';
+
         }
     }, 300);
     setTimeout(() => {
@@ -235,6 +240,7 @@ function sonrakiKelime() {
     const kelime = aktifKelimeler[mevcutKelimeIndex];
     kartDurumu = "ingilizce";
     cardText.textContent = kelime.ingilizce;
+    okunusTxt.textContent = kelime.okunus || '';
     favoriIkonunuGuncelle(); 
 }
 

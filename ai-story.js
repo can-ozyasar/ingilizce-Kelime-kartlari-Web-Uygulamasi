@@ -101,7 +101,7 @@ btnGenerateStory.addEventListener('click', async () => {
     setLoading(true);
 
     const prompt = `
-        Sen bir İngilizce öğretmenisin. Aşağıdaki parametrelere göre kısa bir hikaye yaz.
+        Sen bir İngilizce öğretmenisin. Aşağıdaki parametrelere göre öğrencine bu kelimelerin anlamlarını özümsemesini sağlayacak bir hikaye yaz.
         
         Seviye: ${seviye}
         Konu: ${konu}
@@ -111,6 +111,7 @@ btnGenerateStory.addEventListener('click', async () => {
         1. Hikaye akıcı ve dil bilgisi açısından doğru olsun.
         2. "Kullanılacak Kelimeler" listesindeki kelimeleri hikaye içinde <strong> etiketiyle kalınlaştır (Örn: <strong>apple</strong>).
         3. Yanıtı SADECE geçerli bir JSON formatında ver. Başka bir açıklama yazma.
+        4. Hikayenin türkçe çevirisinde de aynı kelimeleri kalınlaştır.
         
         JSON Formatı:
         {
@@ -165,7 +166,7 @@ function setLoading(isLoading) {
         storyResult.classList.add('d-none');
     } else {
         btnGenerateStory.disabled = false;
-        btnText.textContent = "🚀 Hikayeyi Yaz";
+        btnText.textContent = "Hikayeyi Yaz";
         btnLoading.classList.add('d-none');
     }
 }
