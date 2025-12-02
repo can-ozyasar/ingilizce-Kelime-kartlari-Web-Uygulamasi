@@ -23,7 +23,13 @@
                 </svg>
                 Kelime Kartları
             </a>
+           
+<div class="toggle-container" id="theme-toggle">
+    </div>
 
+<a href="ai-story.html" class="btn btn-outline-primary ms-3" >
+    ✨ AI Hikaye Modu
+</a>
             <div class="toggle-container" id="theme-toggle">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="sun-icon"
                     viewBox="0 0 16 16">
@@ -72,6 +78,92 @@
                 </svg>
             </div>
         </div>
+
+
+
+
+        
+
+<div id="ai-panel" class="container mt-4 d-none" style="max-width: 800px;">
+    
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white py-3">
+            <h5 class="mb-0 fw-semibold">✨ Favori Kelimelerle Hikaye Oluştur</h5>
+        </div>
+        <div class="card-body p-4">
+            
+            <div class="mb-4">
+                <label for="api-key-input" class="form-label fw-bold">Google Gemini API Anahtarı</label>
+                <div class="input-group">
+                    <input type="password" class="form-control form-control-lg" id="api-key-input" placeholder="AI Key'inizi buraya yapıştırın..." autocomplete="off">
+                </div>
+                <div class="form-text text-muted mt-2">
+                    <i class="bi bi-shield-lock me-1"></i>Tarayıcınızın yerel deposunda (localStorage) güvenli bir şekilde saklanır.
+                </div>
+            </div>
+
+            <hr class="my-4 text-muted">
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <label for="story-level" class="form-label fw-bold">Hikaye Seviyesi</label>
+                    <select class="form-select form-select-lg" id="story-level">
+                        <option value="A1">A1 (Başlangıç)</option>
+                        <option value="A2">A2 (Temel)</option>
+                        <option value="B1" selected>B1 (Orta)</option>
+                        <option value="B2">B2 (İyi)</option>
+                        <option value="C1">C1 (İleri)</option>
+                    </select>
+                </div>
+
+                <div class="col-md-8">
+                    <label for="story-topic" class="form-label fw-bold">Hikaye Konusu</label>
+                    <input type="text" class="form-control form-select-lg" id="story-topic" placeholder="Örn: Uzayda bir macera, Markette alışveriş...">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold mb-2">Kullanılacak Favori Kelimeler:</label>
+                <div id="ai-word-list" class="border rounded p-3 bg-light" style="max-height: 250px; overflow-y: auto;">
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-card-list fs-2 d-block mb-2"></i>
+                        Henüz favori kelimeniz yok veya yüklenmedi.
+                    </div>
+                </div>
+                <div class="form-check mt-3 ps-0">
+                    <input class="form-check-input ms-0 me-2" type="checkbox" id="select-all-words" checked style="width: 1.2em; height: 1.2em;">
+                    <label class="form-check-label fw-semibold user-select-none pt-1" for="select-all-words">Tümünü Seç</label>
+                </div>
+            </div>
+
+            <div class="d-grid">
+                <button class="btn btn-success btn-lg py-3 fw-bold fs-5 shadow-sm" id="btn-generate-story">
+                    <span id="btn-text">🚀 Hikayeyi Yaz</span>
+                    <span id="btn-loading" class="spinner-border spinner-border-sm d-none ms-2" role="status" aria-hidden="true"></span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="story-result" class="card mt-5 shadow border-0 d-none mb-5">
+        <div class="card-body p-4">
+            <h3 class="card-title text-primary fw-bold mb-4">Oluşturulan Hikaye</h3>
+            <div id="story-content" class="story-text fs-5 lh-lg">
+                </div>
+            <hr class="my-4">
+            <h5 class="text-secondary fw-bold mb-3">Türkçe Çevirisi / Özeti</h5>
+            <div id="story-translation" class="text-muted lh-base">
+                </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
     </div>
 
 

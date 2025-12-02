@@ -575,3 +575,38 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
+
+
+
+
+
+
+
+
+
+
+
+/* AI Panel Stilleri */
+.story-text strong {
+    color: #d63384; /* Hedef kelimeler pembe/belirgin olsun */
+    font-weight: 700;
+    background-color: rgba(214, 51, 132, 0.1);
+    padding: 0px 4px;
+    border-radius: 4px;
+}
+
+[data-theme="dark"] .story-text strong {
+    color: #ff80ab;
+    background-color: rgba(255, 128, 171, 0.2);
+}
+
+[data-theme="dark"] #ai-word-list {
+    background-color: #2d2d2d !important;
+    border-color: #444 !important;
+    color: #f8f9fa !important;
+}
+
+/* Kart modu ve AI modu geçişleri için yardımcı sınıflar */
+.mode-hidden {
+    display: none !important;
+}

@@ -430,6 +430,213 @@ function kullaniciKelimeleriniYukle() {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ==========================================
+// YAPAY ZEKA (AI) MODÜLÜ
+// ==========================================
+
+const aiPanel = document.getElementById('ai-panel');
+const gameElements = [
+    document.querySelector('.card-container'),
+    document.querySelector('.actions'), // Butonlar ve yıldız
+    document.querySelector('.kelimePaneli'), // Bölüm butonları
+    document.getElementById('ilerleme')
+];
+const navAiBtn = document.getElementById('nav-ai-mode');
+const navGameBtn = document.getElementById('nav-game-mode');
+const aiWordListDiv = document.getElementById('ai-word-list');
+const btnGenerateStory = document.getElementById('btn-generate-story');
+const selectAllCheckbox = document.getElementById('select-all-words');
+const apiKeyInput = document.getElementById('api-key-input');
+
+// API Key'i LocalStorage'dan yükle
+if(localStorage.getItem('gemini-api-key')) {
+    apiKeyInput.value = localStorage.getItem('gemini-api-key');
+}
+
+// Event Listeners - Mod Geçişleri
+navAiBtn.addEventListener('click', () => {
+    modDegistir('ai');
+    favoriKelimeleriListeleUI();
+});
+
+navGameBtn.addEventListener('click', () => {
+    modDegistir('game');
+});
+
+// Event Listener - Tümünü Seç
+selectAllCheckbox.addEventListener('change', (e) => {
+    const checkboxes = document.querySelectorAll('.kelime-secim-cb');
+    checkboxes.forEach(cb => cb.checked = e.target.checked);
+});
+
+// Event Listener - Hikaye Oluştur
+btnGenerateStory.addEventListener('click', hikayeOlustur);
+
+// API Key Kaydetme
+apiKeyInput.addEventListener('change', () => {
+    localStorage.setItem('gemini-api-key', apiKeyInput.value.trim());
+});
+
+function modDegistir(mod) {
+    if (mod === 'ai') {
+        // Oyunu gizle, AI panelini aç
+        gameElements.forEach(el => el && el.classList.add('d-none'));
+        aiPanel.classList.remove('d-none');
+        navAiBtn.classList.add('d-none');
+        navGameBtn.classList.remove('d-none');
+    } else {
+        // AI panelini gizle, oyunu aç
+        gameElements.forEach(el => el && el.classList.remove('d-none'));
+        aiPanel.classList.add('d-none');
+        navAiBtn.classList.remove('d-none');
+        navGameBtn.classList.add('d-none');
+    }
+}
+
+function favoriKelimeleriListeleUI() {
+    aiWordListDiv.innerHTML = '';
+    
+    if (kullaniciKelimeleri.length === 0) {
+        aiWordListDiv.innerHTML = '<span class="text-danger">Listenizde hiç favori kelime yok. Lütfen önce kartlardan yıldız ikonuna basarak kelime ekleyin.</span>';
+        btnGenerateStory.disabled = true;
+        return;
+    }
+
+    btnGenerateStory.disabled = false;
+    
+    kullaniciKelimeleri.forEach((kelime, index) => {
+        const div = document.createElement('div');
+        div.className = 'form-check';
+        div.innerHTML = `
+            <input class="form-check-input kelime-secim-cb" type="checkbox" value="${kelime.ingilizce}" id="ai-cb-${index}" checked>
+            <label class="form-check-label" for="ai-cb-${index}">
+                ${kelime.ingilizce} <small class="text-muted">(${kelime.turkce})</small>
+            </label>
+        `;
+        aiWordListDiv.appendChild(div);
+    });
+}
+
+async function hikayeOlustur() {
+    const apiKey = apiKeyInput.value.trim();
+    if (!apiKey) {
+        alert("Lütfen bir Google Gemini API anahtarı girin!");
+        return;
+    }
+
+    // Seçili kelimeleri al
+    const secilenKelimeler = Array.from(document.querySelectorAll('.kelime-secim-cb:checked')).map(cb => cb.value);
+    const seviye = document.getElementById('story-level').value;
+    const konu = document.getElementById('story-topic').value || "Genel bir konu";
+
+    if (secilenKelimeler.length === 0) {
+        alert("Lütfen en az bir kelime seçin!");
+        return;
+    }
+
+    // UI Yükleniyor durumu
+    const btnText = document.getElementById('btn-text');
+    const btnLoading = document.getElementById('btn-loading');
+    const storyResult = document.getElementById('story-result');
+    const storyContent = document.getElementById('story-content');
+    const storyTranslation = document.getElementById('story-translation');
+
+    btnGenerateStory.disabled = true;
+    btnText.textContent = "Yazılıyor...";
+    btnLoading.classList.remove('d-none');
+    storyResult.classList.add('d-none');
+
+    // Prompt Hazırlama
+    const prompt = `
+        Sen uzman bir İngilizce öğretmenisin.
+        Görev: Aşağıdaki kelimeleri kullanarak kısa bir hikaye yaz.
+        
+        Parametreler:
+        - Hedef Seviye: ${seviye} (CEFR Standartlarına uygun olsun)
+        - Konu: ${konu}
+        - Kullanılacak Kelimeler: ${secilenKelimeler.join(', ')}
+        
+        Çıktı Formatı (JSON Olarak ver):
+        {
+            "story": "İngilizce hikaye metni buraya. Hikaye içinde geçen 'Kullanılacak Kelimeler' listesindeki kelimeleri mutlaka <strong> etiketi içine alarak kalınlaştır (Örn: <strong>word</strong>).",
+            "translation": "Hikayenin Türkçe çevirisi veya geniş özeti buraya."
+        }
+        Lütfen sadece saf JSON döndür, markdown bloğu kullanma.
+    `;
+
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{ text: prompt }]
+                }]
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(data.error.message);
+        }
+
+        // Gemini cevabını işle
+        let textResponse = data.candidates[0].content.parts[0].text;
+        
+        // JSON temizliği (Bazen markdown ```json ... ``` içinde dönebilir)
+        textResponse = textResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+        
+        const jsonResponse = JSON.parse(textResponse);
+
+        // Sonucu Ekrana Bas
+        storyContent.innerHTML = jsonResponse.story;
+        storyTranslation.textContent = jsonResponse.translation;
+        storyResult.classList.remove('d-none');
+
+    } catch (error) {
+        console.error("AI Hatası:", error);
+        alert("Hikaye oluşturulurken bir hata oluştu: " + error.message);
+    } finally {
+        btnGenerateStory.disabled = false;
+        btnText.textContent = "🚀 Hikayeyi Yaz";
+        btnLoading.classList.add('d-none');
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function temaDegistir() {
     const mevcutTema = body.getAttribute('data-theme');
     const yeniTema = mevcutTema === 'dark' ? 'light' : 'dark';
