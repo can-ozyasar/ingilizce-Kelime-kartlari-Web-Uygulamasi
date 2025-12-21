@@ -36,6 +36,7 @@ const btnTemizle = document.getElementById('btn-temizle');
 const btnKapat = document.getElementById('btn-kapat');
 const favlama = document.getElementById("favlama");
 const okunusTxt = document.getElementById("card_pronunciation");
+const aiModeBtn = document.getElementById("ai-story-btn");
 
 const bolumBtnlari = [
     document.getElementById('btn-1'),
@@ -650,6 +651,8 @@ function temaDegistir() {
     const yeniTema = mevcutTema === 'dark' ? 'light' : 'dark';
     body.setAttribute('data-theme', yeniTema);
     toggleSwitch.classList.toggle('active', yeniTema === 'dark');
+    okunusTxt.style.color = yeniTema === 'dark' ? '#ffffffff' : '#333';
+    okunusTxt.style.background = yeniTema === 'dark' ? 'rgba(0, 0, 0, 1)' : 'rgba(255,255,255,0.7)';
     localStorage.setItem('kelime-kartlari-tema', yeniTema);
 }
 
