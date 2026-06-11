@@ -2,11 +2,25 @@
 
 İngilizce kelime çalışmak için hazırlanmış web tabanlı kart uygulaması.
 
-## Öne Çıkanlar
+## Bu Repo Ne İçin Var?
+İngilizce kelime tekrarını kart mantığıyla kolaylaştıran basit bir web uygulaması geliştirmek için oluşturuldu.
+
+Bu README'nin amacı; repoya ilk kez gelen birinin projenin neden açıldığını, içinde ne bulunduğunu ve nereden başlaması gerektiğini hızlıca anlamasını sağlamaktır.
+
+## İçerik ve Kapsam
+Bu repoda öne çıkan içerikler şunlardır:
 - Tarayıcıda çalışan sade arayüz
 - Kelime kartı/pratik mantığı
 - Statik web dosyalarıyla kolay yayınlanabilir yapı
-- Kullanılan ana teknolojiler: JavaScript, HTML, CSS
+- Tarayıcıda incelenebilen HTML arayüz dosyaları
+
+## Kimler İçin Faydalı?
+Frontend/web geliştirme pratiği yapmak, arayüz yapısını incelemek veya projeyi kişiselleştirmek isteyenler için uygundur.
+
+## Kullanılan Teknolojiler
+- JavaScript
+- HTML
+- CSS
 
 ## Çalıştırma
 ```bash
