@@ -1,14 +1,17 @@
 import { kelimeler } from "./kelimelerOkunuslu.js";
+import * as ogrenmeMotoru from "./ogrenmeMotoru.js";
 
 const tumKelimeler = kelimeler;
 
+const OZEL_MODU = 'ozel';
+const BUGUN_MODU = 'bugun';
 
 const SVG_STAR_FILLED = `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>`;
 const SVG_STAR_EMPTY = `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16"><path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/></svg>`;
 
 
 // Oyun durumu değişkenleri
-let mevcutBolum = 1;
+let mevcutBolum = BUGUN_MODU;
 let mevcutKelimeler = [];
 let kullaniciKelimeleri = []; // Kullanıcının yüklediği kelimeler (Favoriler)
 let mevcutKelimeIndex = 0;
@@ -17,6 +20,8 @@ let bilmiyorumListesi = [];
 let ogrenilenler = [];
 let aktifKelimeler = [];
 let animasyonDevamEdiyor = false;
+let temizlemeOnayBekleniyor = false;
+let temizlemeOnayZamanlayici = null;
 
 // DOM elementleri
 const card = document.getElementById('card');
@@ -33,19 +38,17 @@ const kelimeTextarea = document.getElementById('kelime-textarea');
 const kelimeSayisiDiv = document.getElementById('kelime-sayisi');
 const btnYukle = document.getElementById('btn-yukle');
 const btnTemizle = document.getElementById('btn-temizle');
+const btnTemizleOrijinalHTML = btnTemizle.innerHTML;
 const btnKapat = document.getElementById('btn-kapat');
 const favlama = document.getElementById("favlama");
 const okunusTxt = document.getElementById("card_pronunciation");
-const aiModeBtn = document.getElementById("ai-story-btn");
+const btnBugunTekrar = document.getElementById('btn-bugun-tekrar');
+const durumBugunSayi = document.getElementById('durum-bugun-sayi');
+const durumSeriSayi = document.getElementById('durum-seri-sayi');
+const durumOgrenilenSayi = document.getElementById('durum-ogrenilen-sayi');
+const toastAlani = document.getElementById('toast-alani');
 
-const bolumBtnlari = [
-    document.getElementById('btn-1'),
-    document.getElementById('btn-2'),
-    document.getElementById('btn-3'),
-    document.getElementById('btn-4'),
-    document.getElementById('btn-5'),
-    document.getElementById('btn-6')
-];
+let bolumBtnlari = [];
 
 function kelimeleriAyir() {
     const bolumler = [];
@@ -64,21 +67,37 @@ function kelimeleriAyir() {
 const bolumler = kelimeleriAyir();
 
 document.addEventListener('DOMContentLoaded', function () {
+    bolumButonlariniOlustur();
     eventListenerlarEkle();
     temaDurumunuYukle();
     kullaniciKelimeleriniYukle();
-    bolumDegistir(1);
+    bugunTekrarBaslat();
 });
 
+function bolumButonlariniOlustur() {
+    const container = document.getElementById('bolum-butonlari-container');
+    bolumler.forEach((_, index) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.id = `btn-${index + 1}`;
+        btn.className = 'btn btn-outline-primary';
+        btn.textContent = String(index + 1);
+        container.appendChild(btn);
+    });
+    bolumBtnlari = Array.from(container.children).concat(document.getElementById('btn-6'));
+}
+
 function eventListenerlarEkle() {
-    favlama.addEventListener('click', favoriDurumunuDegistir); // <-- DÜZENLENDİ
+    favlama.addEventListener('click', favoriDurumunuDegistir);
     card.addEventListener('click', kartiCevir);
     themeToggle.addEventListener('click', temaDegistir);
+    const sonIndex = bolumBtnlari.length - 1;
     bolumBtnlari.forEach((btn, index) => {
         btn.addEventListener('click', () => {
-            bolumDegistir(index + 1);
+            bolumDegistir(index === sonIndex ? OZEL_MODU : index + 1);
         });
     });
+    btnBugunTekrar.addEventListener('click', bugunTekrarBaslat);
     kelimeYukleBtn.addEventListener('click', kelimeYuklePaneliniAc);
     btnKapat.addEventListener('click', kelimeYuklePaneliniKapat);
     btnYukle.addEventListener('click', kelimeleriYukle);
@@ -114,14 +133,32 @@ function eventListenerlarEkle() {
     });
 }
 
+function tumHavuzuGetir() {
+    const harita = new Map();
+    tumKelimeler.forEach(k => harita.set(k.ingilizce, k));
+    kullaniciKelimeleri.forEach(k => harita.set(k.ingilizce, k));
+    return Array.from(harita.values());
+}
+
+function bugunTekrarBaslat() {
+    mevcutBolum = BUGUN_MODU;
+    bolumBtnlari.forEach(btn => btn.classList.remove('active'));
+    btnBugunTekrar.classList.add('active');
+    mevcutKelimeler = ogrenmeMotoru.bugunTekrarEdilecekleriGetir(tumHavuzuGetir());
+    oyunuSifirla();
+}
+
 function bolumDegistir(bolumNo) {
     mevcutBolum = bolumNo;
+    btnBugunTekrar.classList.remove('active');
+    const sonIndex = bolumBtnlari.length - 1;
     bolumBtnlari.forEach((btn, index) => {
-        btn.classList.toggle('active', index + 1 === bolumNo);
+        const buAktif = index === sonIndex ? bolumNo === OZEL_MODU : bolumNo === index + 1;
+        btn.classList.toggle('active', buAktif);
     });
-    if (bolumNo === 6) {
+    if (bolumNo === OZEL_MODU) {
         if (kullaniciKelimeleri.length === 0) {
-            alert('Favori kelime listeniz boş. Kartların üzerindeki yıldız ikonuna basarak favori ekleyebilirsiniz.');
+            bildirimGoster('Favori kelime listeniz boş. Kartların üzerindeki yıldız ikonuna basarak favori ekleyebilirsiniz.', 'bilgi');
             cardText.textContent = 'Favori kelime listeniz boş';
             mevcutKelimeler = [];
             oyunuSifirla();
@@ -156,6 +193,7 @@ function oyunuSifirla() {
         oyunBitti();
     }
     ilerlemeyiGuncelle();
+    durumCubuguGuncelle();
 }
 
 
@@ -167,7 +205,7 @@ function ilkKelimeyiGoster() {
         okunusTxt.textContent = kelime.okunus || '';
         kartRenginiSifirla();
         ilerlemeyiGuncelle();
-        favoriIkonunuGuncelle(); 
+        favoriIkonunuGuncelle();
     } else {
         oyunBitti();
     }
@@ -216,6 +254,8 @@ function biliyorumIsle() {
         ogrenilenler.push(mevcutKelime);
     }
     aktifKelimeler.splice(mevcutKelimeIndex, 1);
+    ogrenmeMotoru.kelimeSonucunuKaydet(mevcutKelime.ingilizce, true);
+    durumCubuguGuncelle();
     sonrakiKelime();
 }
 
@@ -226,6 +266,8 @@ function bilmiyorumIsle() {
     }
     aktifKelimeler.splice(mevcutKelimeIndex, 1);
     aktifKelimeler.push(mevcutKelime);
+    ogrenmeMotoru.kelimeSonucunuKaydet(mevcutKelime.ingilizce, false);
+    durumCubuguGuncelle();
     sonrakiKelime();
 }
 
@@ -242,45 +284,60 @@ function sonrakiKelime() {
     kartDurumu = "ingilizce";
     cardText.textContent = kelime.ingilizce;
     okunusTxt.textContent = kelime.okunus || '';
-    favoriIkonunuGuncelle(); 
+    favoriIkonunuGuncelle();
 }
 
 function ilerlemeyiGuncelle() {
     const toplamKelime = mevcutKelimeler.length;
     const ogrenilenSayi = ogrenilenler.length;
     const yuzde = toplamKelime > 0 ? Math.round((ogrenilenSayi / toplamKelime) * 100) : 0;
-    const bolumAdi = mevcutBolum === 6 ? 'Favoriler' : `Bölüm ${mevcutBolum}`;
+    const bolumAdi = mevcutBolum === OZEL_MODU ? 'Favoriler'
+        : mevcutBolum === BUGUN_MODU ? 'Bugün Tekrarı'
+        : `Bölüm ${mevcutBolum}`;
     ilerlemeTxt.textContent = `İlerleme: %${yuzde} (${ogrenilenSayi}/${toplamKelime}) - ${bolumAdi}`;
 }
 
 function oyunBitti() {
-    favlama.style.display = 'none'; 
+    favlama.style.display = 'none';
+    biliyorumBtn.style.display = 'none';
+    bilmiyorumBtn.style.display = 'none';
+    okunusTxt.textContent = '';
     const toplamKelime = mevcutKelimeler.length;
-    if (toplamKelime === 0 && mevcutBolum !== 6) {
-        cardText.innerHTML = `Bu bölümde kelime bulunmuyor.`;
-        biliyorumBtn.style.display = 'none';
-        bilmiyorumBtn.style.display = 'none';
+
+    if (toplamKelime === 0) {
+        if (mevcutBolum === BUGUN_MODU) {
+            cardText.innerHTML = `
+                <div class="finish-container">
+                    <h3>✅ Harika iş!</h3>
+                    <p>Bugün için tekrar edilecek kelime yok.</p>
+                    <small>Yeni kelimeler için bir Bölüm seçin.</small>
+                </div>
+            `;
+        } else if (mevcutBolum === OZEL_MODU) {
+            cardText.textContent = 'Favori kelime listeniz boş';
+        } else {
+            cardText.innerHTML = 'Bu bölümde kelime bulunmuyor.';
+        }
         return;
     }
-    const bolumAdi = mevcutBolum === 6 ? 'Favori Kelimeleriniz' : `Bölüm ${mevcutBolum}`;
-    okunusTxt.textContent = '';
+
+    const bolumAdi = mevcutBolum === OZEL_MODU ? 'Favori Kelimeleriniz'
+        : mevcutBolum === BUGUN_MODU ? 'Bugünkü Tekrar'
+        : `Bölüm ${mevcutBolum}`;
     cardText.innerHTML = `
         <div class="finish-container">
             <h3>🎉 Tebrikler!</h3>
             <p>${bolumAdi} tamamlandı!</p>
             <small>Öğrenilen: ${ogrenilenler.length}/${toplamKelime} kelime</small>
             <br>
-            <button onclick="oyunuYenidenBaslat()" class="btn-restart mt-3">
-                Yeniden Başla
-            </button>
+            <button type="button" class="btn-restart mt-3">Yeniden Başla</button>
         </div>
     `;
-    biliyorumBtn.style.display = 'none';
-    bilmiyorumBtn.style.display = 'none';
+    const restartBtn = cardText.querySelector('.btn-restart');
+    if (restartBtn) restartBtn.addEventListener('click', oyunuYenidenBaslat);
 }
 
 function oyunuYenidenBaslat() {
-    console.log('Oyunu yeniden başlatılıyor...');
     oyunuSifirla();
 }
 
@@ -328,7 +385,7 @@ function kelimeOnizlemesiniGuncelle() {
 function kelimeleriYukle() {
     const metin = kelimeTextarea.value.trim();
     if (!metin) {
-        alert('Lütfen önce kelime girin!');
+        bildirimGoster('Lütfen önce kelime girin!', 'hata');
         return;
     }
     const satirlar = metin.split('\n').filter(satir => satir.trim());
@@ -346,15 +403,15 @@ function kelimeleriYukle() {
         }
     });
     if (yeniKelimeler.length === 0) {
-        alert('Geçerli kelime bulunamadı! Format: ingilizce,turkce');
+        bildirimGoster('Geçerli kelime bulunamadı! Format: ingilizce,turkce', 'hata');
         return;
     }
     kullaniciKelimeleri = [...yeniKelimeler];
     kullaniciKelimeleriniGuncelle(); // Kaydet ve textarea'yı güncelle
-    alert(`${yeniKelimeler.length} kelime başarıyla yüklendi!`);
+    bildirimGoster(`${yeniKelimeler.length} kelime başarıyla yüklendi!`, 'basari');
     kelimeYuklePaneliniKapat();
-    if (mevcutBolum === 6) {
-        bolumDegistir(6);
+    if (mevcutBolum === OZEL_MODU) {
+        bolumDegistir(OZEL_MODU);
     }
 }
 
@@ -378,6 +435,7 @@ function favoriDurumunuDegistir() {
     }
 
     kullaniciKelimeleriniGuncelle(); // Değişiklikleri kaydet ve textarea'yı güncelle
+    durumCubuguGuncelle();
 }
 
 
@@ -398,22 +456,34 @@ function favoriIkonunuGuncelle() {
 
 
 function kelimeleriTemizle() {
-    if (confirm('Tüm özel/favori kelimeleriniz silinecek. Emin misiniz?')) {
-        kullaniciKelimeleri = [];
-        kullaniciKelimeleriniGuncelle();
-        alert('Tüm özel kelimeler silindi.');
-        if (mevcutBolum === 6) {
-            bolumDegistir(1);
-        }
+    if (!temizlemeOnayBekleniyor) {
+        temizlemeOnayBekleniyor = true;
+        btnTemizle.textContent = 'Emin misiniz? (Tekrar tıklayın)';
+        clearTimeout(temizlemeOnayZamanlayici);
+        temizlemeOnayZamanlayici = setTimeout(temizlemeOnayiSifirla, 4000);
+        return;
+    }
+    clearTimeout(temizlemeOnayZamanlayici);
+    temizlemeOnayiSifirla();
+    kullaniciKelimeleri = [];
+    kullaniciKelimeleriniGuncelle();
+    bildirimGoster('Tüm özel kelimeler silindi.', 'basari');
+    if (mevcutBolum === OZEL_MODU) {
+        bolumDegistir(OZEL_MODU);
     }
 }
 
-// --- YENİ YARDIMCI FONKSİYON: Kaydetme ve Textarea Güncelleme ---
+function temizlemeOnayiSifirla() {
+    temizlemeOnayBekleniyor = false;
+    btnTemizle.innerHTML = btnTemizleOrijinalHTML;
+}
+
+// --- YARDIMCI FONKSİYON: Kaydetme ve Textarea Güncelleme ---
 function kullaniciKelimeleriniGuncelle() {
     try {
         // 1. localStorage'a kaydet
         localStorage.setItem('kelime-kartlari-ozel-kelimeler', JSON.stringify(kullaniciKelimeleri));
-        
+
         // 2. Textarea'yı güncelle
         const kelimeMetni = kullaniciKelimeleri.map(k => `${k.ingilizce},${k.turkce}`).join('\n');
         kelimeTextarea.value = kelimeMetni;
@@ -440,210 +510,22 @@ function kullaniciKelimeleriniYukle() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ==========================================
-// YAPAY ZEKA (AI) MODÜLÜ
-// ==========================================
-
-const aiPanel = document.getElementById('ai-panel');
-const gameElements = [
-    document.querySelector('.card-container'),
-    document.querySelector('.actions'), // Butonlar ve yıldız
-    document.querySelector('.kelimePaneli'), // Bölüm butonları
-    document.getElementById('ilerleme')
-];
-const navAiBtn = document.getElementById('nav-ai-mode');
-const navGameBtn = document.getElementById('nav-game-mode');
-const aiWordListDiv = document.getElementById('ai-word-list');
-const btnGenerateStory = document.getElementById('btn-generate-story');
-const selectAllCheckbox = document.getElementById('select-all-words');
-const apiKeyInput = document.getElementById('api-key-input');
-
-// API Key'i LocalStorage'dan yükle
-if(localStorage.getItem('gemini-api-key')) {
-    apiKeyInput.value = localStorage.getItem('gemini-api-key');
+function durumCubuguGuncelle() {
+    const havuz = tumHavuzuGetir();
+    const istatistik = ogrenmeMotoru.istatistikleriGetir(havuz);
+    durumBugunSayi.textContent = istatistik.bugunTekrarSayisi;
+    durumSeriSayi.textContent = ogrenmeMotoru.seriBilgisiGetir().mevcutSeri;
+    durumOgrenilenSayi.textContent = istatistik.ogrenilenSayisi;
 }
 
-// Event Listeners - Mod Geçişleri
-navAiBtn.addEventListener('click', () => {
-    modDegistir('ai');
-    favoriKelimeleriListeleUI();
-});
-
-navGameBtn.addEventListener('click', () => {
-    modDegistir('game');
-});
-
-// Event Listener - Tümünü Seç
-selectAllCheckbox.addEventListener('change', (e) => {
-    const checkboxes = document.querySelectorAll('.kelime-secim-cb');
-    checkboxes.forEach(cb => cb.checked = e.target.checked);
-});
-
-// Event Listener - Hikaye Oluştur
-btnGenerateStory.addEventListener('click', hikayeOlustur);
-
-// API Key Kaydetme
-apiKeyInput.addEventListener('change', () => {
-    localStorage.setItem('gemini-api-key', apiKeyInput.value.trim());
-});
-
-function modDegistir(mod) {
-    if (mod === 'ai') {
-        // Oyunu gizle, AI panelini aç
-        gameElements.forEach(el => el && el.classList.add('d-none'));
-        aiPanel.classList.remove('d-none');
-        navAiBtn.classList.add('d-none');
-        navGameBtn.classList.remove('d-none');
-    } else {
-        // AI panelini gizle, oyunu aç
-        gameElements.forEach(el => el && el.classList.remove('d-none'));
-        aiPanel.classList.add('d-none');
-        navAiBtn.classList.remove('d-none');
-        navGameBtn.classList.add('d-none');
-    }
+function bildirimGoster(mesaj, tur = 'bilgi') {
+    const el = document.createElement('div');
+    el.className = `toast-mesaj toast-${tur}`;
+    el.textContent = mesaj;
+    toastAlani.appendChild(el);
+    setTimeout(() => el.classList.add('kayboluyor'), 2500);
+    setTimeout(() => el.remove(), 2900);
 }
-
-function favoriKelimeleriListeleUI() {
-    aiWordListDiv.innerHTML = '';
-    
-    if (kullaniciKelimeleri.length === 0) {
-        aiWordListDiv.innerHTML = '<span class="text-danger">Listenizde hiç favori kelime yok. Lütfen önce kartlardan yıldız ikonuna basarak kelime ekleyin.</span>';
-        btnGenerateStory.disabled = true;
-        return;
-    }
-
-    btnGenerateStory.disabled = false;
-    
-    kullaniciKelimeleri.forEach((kelime, index) => {
-        const div = document.createElement('div');
-        div.className = 'form-check';
-        div.innerHTML = `
-            <input class="form-check-input kelime-secim-cb" type="checkbox" value="${kelime.ingilizce}" id="ai-cb-${index}" checked>
-            <label class="form-check-label" for="ai-cb-${index}">
-                ${kelime.ingilizce} <small class="text-muted">(${kelime.turkce})</small>
-            </label>
-        `;
-        aiWordListDiv.appendChild(div);
-    });
-}
-
-async function hikayeOlustur() {
-    const apiKey = apiKeyInput.value.trim();
-    if (!apiKey) {
-        alert("Lütfen bir Google Gemini API anahtarı girin!");
-        return;
-    }
-
-    // Seçili kelimeleri al
-    const secilenKelimeler = Array.from(document.querySelectorAll('.kelime-secim-cb:checked')).map(cb => cb.value);
-    const seviye = document.getElementById('story-level').value;
-    const konu = document.getElementById('story-topic').value || "Genel bir konu";
-
-    if (secilenKelimeler.length === 0) {
-        alert("Lütfen en az bir kelime seçin!");
-        return;
-    }
-
-    // UI Yükleniyor durumu
-    const btnText = document.getElementById('btn-text');
-    const btnLoading = document.getElementById('btn-loading');
-    const storyResult = document.getElementById('story-result');
-    const storyContent = document.getElementById('story-content');
-    const storyTranslation = document.getElementById('story-translation');
-
-    btnGenerateStory.disabled = true;
-    btnText.textContent = "Yazılıyor...";
-    btnLoading.classList.remove('d-none');
-    storyResult.classList.add('d-none');
-
-    // Prompt Hazırlama
-    const prompt = `
-        Sen uzman bir İngilizce öğretmenisin.
-        Görev: Aşağıdaki kelimeleri kullanarak kısa bir hikaye yaz.
-        
-        Parametreler:
-        - Hedef Seviye: ${seviye} (CEFR Standartlarına uygun olsun)
-        - Konu: ${konu}
-        - Kullanılacak Kelimeler: ${secilenKelimeler.join(', ')}
-        
-        Çıktı Formatı (JSON Olarak ver):
-        {
-            "story": "İngilizce hikaye metni buraya. Hikaye içinde geçen 'Kullanılacak Kelimeler' listesindeki kelimeleri mutlaka <strong> etiketi içine alarak kalınlaştır (Örn: <strong>word</strong>).",
-            "translation": "Hikayenin Türkçe çevirisi veya geniş özeti buraya."
-        }
-        Lütfen sadece saf JSON döndür, markdown bloğu kullanma.
-    `;
-
-    try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{ text: prompt }]
-                }]
-            })
-        });
-
-        const data = await response.json();
-        
-        if (data.error) {
-            throw new Error(data.error.message);
-        }
-
-        // Gemini cevabını işle
-        let textResponse = data.candidates[0].content.parts[0].text;
-        
-        // JSON temizliği (Bazen markdown ```json ... ``` içinde dönebilir)
-        textResponse = textResponse.replace(/```json/g, '').replace(/```/g, '').trim();
-        
-        const jsonResponse = JSON.parse(textResponse);
-
-        // Sonucu Ekrana Bas
-        storyContent.innerHTML = jsonResponse.story;
-        storyTranslation.textContent = jsonResponse.translation;
-        storyResult.classList.remove('d-none');
-
-    } catch (error) {
-        console.error("AI Hatası:", error);
-        alert("Hikaye oluşturulurken bir hata oluştu: " + error.message);
-    } finally {
-        btnGenerateStory.disabled = false;
-        btnText.textContent = "🚀 Hikayeyi Yaz";
-        btnLoading.classList.add('d-none');
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 function temaDegistir() {
@@ -651,8 +533,6 @@ function temaDegistir() {
     const yeniTema = mevcutTema === 'dark' ? 'light' : 'dark';
     body.setAttribute('data-theme', yeniTema);
     toggleSwitch.classList.toggle('active', yeniTema === 'dark');
-    okunusTxt.style.color = yeniTema === 'dark' ? '#ffffffff' : '#333';
-    okunusTxt.style.background = yeniTema === 'dark' ? 'rgba(0, 0, 0, 1)' : 'rgba(255,255,255,0.7)';
     localStorage.setItem('kelime-kartlari-tema', yeniTema);
 }
 
@@ -661,5 +541,3 @@ function temaDurumunuYukle() {
     body.setAttribute('data-theme', kaydedilmisTema);
     toggleSwitch.classList.toggle('active', kaydedilmisTema === 'dark');
 }
-
-window.oyunuYenidenBaslat = oyunuYenidenBaslat;
