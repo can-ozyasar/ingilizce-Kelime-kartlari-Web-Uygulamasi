@@ -3,9 +3,13 @@
 
 const SRS_DEPO_ANAHTARI = 'kelime-kartlari-srs-durumu';
 const SERI_DEPO_ANAHTARI = 'kelime-kartlari-seri';
+const YENI_SAYAC_ANAHTARI = 'kelime-kartlari-yeni-sayac';
 const OGRENILDI_ESIGI_GUN = 21;
 const BASLANGIC_EF = 2.5;
 const MIN_EF = 1.3;
+// Her gün en fazla bu kadar HİÇ görülmemiş kelime "Bugün Tekrarı"na dahil edilir.
+// Tekrarı gelen (daha önce görülmüş) kelimeler bu sınırdan etkilenmez, her zaman dahil edilir.
+const YENI_KELIME_GUNLUK_LIMIT = 20;
 
 function bugunTarihi() {
     const d = new Date();
@@ -73,10 +77,11 @@ export function kelimeDurumunuOku(ingilizce) {
     return harita[ingilizce] || varsayilanKayit();
 }
 
-/** Tek yazma noktası: SM-2 hesabını yapar, kelime durumunu ve günlük seriyi kaydeder. */
+/** Tek yazma noktası: SM-2 hesabını yapar, kelime durumunu, günlük seriyi ve yeni-kelime sayacını günceller. */
 export function kelimeSonucunuKaydet(ingilizce, biliyorMu) {
     const kalite = biliyorMu ? 4 : 2;
     const harita = durumHaritasiniOku();
+    const ilkKezMi = !harita[ingilizce];
     const mevcut = harita[ingilizce] || varsayilanKayit();
     const guncel = {
         ...mevcut,
@@ -87,6 +92,9 @@ export function kelimeSonucunuKaydet(ingilizce, biliyorMu) {
     harita[ingilizce] = guncel;
     durumHaritasiniYaz(harita);
     gunlukSeriGuncelle();
+    if (ilkKezMi) {
+        yeniKelimeSayacinaEkle();
+    }
     return guncel;
 }
 
@@ -94,28 +102,78 @@ export function kelimeBugunTekrardaMi(ingilizce) {
     return kelimeDurumunuOku(ingilizce).sonrakiTekrarTarihi <= bugunTarihi();
 }
 
+/**
+ * Kelime havuzunu "tekrarı gelen" (daha önce görülmüş, süresi gelmiş) ve
+ * "hiç görülmemiş" (yeni) olarak ikiye ayırır. İkisi farklı kurallara tabidir:
+ * tekrarlar hiçbir zaman ertelenmez, yeniler günlük limitle sınırlanır.
+ */
+function havuzuAyir(kelimeHavuzu) {
+    const harita = durumHaritasiniOku();
+    const bugun = bugunTarihi();
+    const tekrarGelenler = [];
+    const hicGorulmemis = [];
+    kelimeHavuzu.forEach(k => {
+        const kayit = harita[k.ingilizce];
+        if (kayit) {
+            if (kayit.sonrakiTekrarTarihi <= bugun) {
+                tekrarGelenler.push(k);
+            }
+        } else {
+            hicGorulmemis.push(k);
+        }
+    });
+    return { tekrarGelenler, hicGorulmemis };
+}
+
 /** @param {{ingilizce: string}[]} kelimeHavuzu */
 export function bugunTekrarEdilecekleriGetir(kelimeHavuzu) {
-    return kelimeHavuzu.filter(k => kelimeBugunTekrardaMi(k.ingilizce));
+    const { tekrarGelenler, hicGorulmemis } = havuzuAyir(kelimeHavuzu);
+    const kalanYeniHakki = Math.max(0, YENI_KELIME_GUNLUK_LIMIT - bugunTanitilanYeniSayisi());
+    return [...tekrarGelenler, ...hicGorulmemis.slice(0, kalanYeniHakki)];
 }
 
 /** @param {{ingilizce: string}[]} kelimeHavuzu */
 export function istatistikleriGetir(kelimeHavuzu) {
     const harita = durumHaritasiniOku();
-    const bugun = bugunTarihi();
     let ogrenilenSayisi = 0;
-    let bugunTekrarSayisi = 0;
     kelimeHavuzu.forEach(k => {
         const kayit = harita[k.ingilizce];
         if (kayit && kayit.aralikGun >= OGRENILDI_ESIGI_GUN) {
             ogrenilenSayisi++;
         }
-        const dueTarihi = kayit ? kayit.sonrakiTekrarTarihi : bugun;
-        if (dueTarihi <= bugun) {
-            bugunTekrarSayisi++;
-        }
     });
+    const bugunTekrarSayisi = bugunTekrarEdilecekleriGetir(kelimeHavuzu).length;
     return { toplamKelime: kelimeHavuzu.length, ogrenilenSayisi, bugunTekrarSayisi };
+}
+
+function yeniSayacDurumunuOku() {
+    try {
+        const ham = localStorage.getItem(YENI_SAYAC_ANAHTARI);
+        return ham ? JSON.parse(ham) : { tarih: bugunTarihi(), sayi: 0 };
+    } catch (e) {
+        console.warn('Yeni kelime sayacı okunamadı:', e);
+        return { tarih: bugunTarihi(), sayi: 0 };
+    }
+}
+
+function yeniKelimeSayacinaEkle() {
+    const bugun = bugunTarihi();
+    let durum = yeniSayacDurumunuOku();
+    if (durum.tarih !== bugun) {
+        durum = { tarih: bugun, sayi: 0 };
+    }
+    durum.sayi += 1;
+    try {
+        localStorage.setItem(YENI_SAYAC_ANAHTARI, JSON.stringify(durum));
+    } catch (e) {
+        console.warn('Yeni kelime sayacı kaydedilemedi:', e);
+    }
+}
+
+/** Bugün "Bugün Tekrarı" üzerinden ilk kez tanıtılan (hiç görülmemiş) kelime sayısı. */
+export function bugunTanitilanYeniSayisi() {
+    const durum = yeniSayacDurumunuOku();
+    return durum.tarih === bugunTarihi() ? durum.sayi : 0;
 }
 
 function seriDurumunuOku() {
@@ -141,6 +199,18 @@ function gunlukSeriGuncelle() {
     }
 }
 
+/**
+ * Seriyi GÖRÜNTÜLEME amaçlı okur: kayıtlı sayı sadece "bugün" veya "dün"
+ * çalışılmışsa geçerlidir, aksi halde seri fiilen kırılmıştır ve 0 gösterilir
+ * (kullanıcı yeniden çalışana kadar depodaki eski sayı silinmez, sadece
+ * ekrana yansıtılmaz).
+ */
 export function seriBilgisiGetir() {
-    return seriDurumunuOku();
+    const durum = seriDurumunuOku();
+    const bugun = bugunTarihi();
+    const dun = tarihEkle(bugun, -1);
+    if (durum.sonAktifTarih === bugun || durum.sonAktifTarih === dun) {
+        return durum;
+    }
+    return { mevcutSeri: 0, sonAktifTarih: durum.sonAktifTarih };
 }

@@ -11,6 +11,11 @@
     --hole-shadow: rgba(0, 0, 0, 0.18);
     --border: #c7c4b5;
     --shadow: 0 10px 24px -12px rgba(30, 28, 20, 0.35);
+    /* Bu iki token kasıtlı olarak temaya göre değişmez: kırmızı/yeşil/pirinç
+       vurgu renkleri her iki temada da orta tonlarda kalıyor, bu yüzden
+       üzerlerindeki yazı --ink/--surface gibi kutuplaşmıyor, sabit kalmalı. */
+    --on-solid: #fbfaf5;
+    --on-brass: #2b2a25;
 }
 
 [data-theme="dark"] {
@@ -137,9 +142,9 @@ button {
 .toast-mesaj {
     width: 100%;
     text-align: center;
-    padding: 10px 16px;
+    padding: 11px 16px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.04em;
     color: var(--surface);
@@ -154,8 +159,8 @@ button {
     transform: translateY(8px);
 }
 
-.toast-basari { background-color: var(--ok-green); }
-.toast-hata { background-color: var(--rule-red-strong); }
+.toast-basari { background-color: var(--ok-green); color: var(--on-solid); }
+.toast-hata { background-color: var(--rule-red-strong); color: var(--on-solid); }
 .toast-bilgi { background-color: var(--ink); }
 
 /* ---------- Layout ---------- */
@@ -191,8 +196,8 @@ button {
 }
 
 .stamp-l {
-    font-size: 9px;
-    letter-spacing: 0.12em;
+    font-size: 11px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--muted);
     display: block;
@@ -229,13 +234,13 @@ button {
 
 .cta-tekrar.active {
     background-color: var(--brass);
-    color: var(--ink);
+    color: var(--on-brass);
 }
 
 /* ---------- Progress pill ---------- */
 
 .ilerleme {
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     text-align: center;
@@ -290,10 +295,10 @@ button {
     top: 0;
     right: 20px;
     background-color: var(--rule-red);
-    color: var(--surface);
-    font-size: 9px;
+    color: var(--on-solid);
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     padding: 4px 10px 5px;
     border-radius: 0 0 4px 4px;
@@ -310,7 +315,7 @@ button {
 }
 
 .card-pronunciation {
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: var(--rule-red-strong);
     margin: 10px 0 0;
 }
@@ -361,7 +366,7 @@ button {
 .btn-answer.yes {
     border: 2px solid var(--ok-green);
     background-color: var(--ok-green);
-    color: var(--surface);
+    color: var(--on-solid);
 }
 
 .btn-answer:active {
@@ -386,8 +391,8 @@ button {
 }
 
 .sections-label {
-    font-size: 10px;
-    letter-spacing: 0.14em;
+    font-size: 11px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--muted);
     margin: 0 0 10px;
@@ -406,7 +411,7 @@ button {
 }
 
 .chip {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     border: 1.5px solid var(--border);
     color: var(--muted);
@@ -447,7 +452,7 @@ button {
 }
 
 .kelime-yukle-panel h4 {
-    font-size: 13px;
+    font-size: 14px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink);
@@ -455,7 +460,7 @@ button {
 }
 
 .kelime-info {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.6;
     color: var(--muted);
     border: 1px solid var(--border);
@@ -477,7 +482,7 @@ button {
     background-color: var(--surface);
     color: var(--ink);
     font-family: inherit;
-    font-size: 13px;
+    font-size: 14px;
     resize: vertical;
 }
 
@@ -489,7 +494,7 @@ button {
 .kelime-sayisi {
     text-align: center;
     margin: 10px 0;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--muted);
 }
@@ -505,7 +510,7 @@ button {
 }
 
 .btn-kelime-action {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -549,7 +554,7 @@ button {
     border: none;
     border-radius: 4px;
     padding: 12px 24px;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
