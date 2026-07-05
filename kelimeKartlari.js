@@ -42,6 +42,7 @@ const btnTemizleOrijinalHTML = btnTemizle.innerHTML;
 const btnKapat = document.getElementById('btn-kapat');
 const favlama = document.getElementById("favlama");
 const okunusTxt = document.getElementById("card_pronunciation");
+const cardTab = document.getElementById('card-tab');
 const btnBugunTekrar = document.getElementById('btn-bugun-tekrar');
 const durumBugunSayi = document.getElementById('durum-bugun-sayi');
 const durumSeriSayi = document.getElementById('durum-seri-sayi');
@@ -80,7 +81,7 @@ function bolumButonlariniOlustur() {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.id = `btn-${index + 1}`;
-        btn.className = 'btn btn-outline-primary';
+        btn.className = 'chip';
         btn.textContent = String(index + 1);
         container.appendChild(btn);
     });
@@ -194,6 +195,13 @@ function oyunuSifirla() {
     }
     ilerlemeyiGuncelle();
     durumCubuguGuncelle();
+    kartTabiGuncelle();
+}
+
+function kartTabiGuncelle() {
+    cardTab.textContent = mevcutBolum === OZEL_MODU ? 'Özel'
+        : mevcutBolum === BUGUN_MODU ? 'Bugün'
+        : `Bölüm ${mevcutBolum}`;
 }
 
 
@@ -308,7 +316,7 @@ function oyunBitti() {
         if (mevcutBolum === BUGUN_MODU) {
             cardText.innerHTML = `
                 <div class="finish-container">
-                    <h3>✅ Harika iş!</h3>
+                    <h3>Harika iş!</h3>
                     <p>Bugün için tekrar edilecek kelime yok.</p>
                     <small>Yeni kelimeler için bir Bölüm seçin.</small>
                 </div>
@@ -326,11 +334,11 @@ function oyunBitti() {
         : `Bölüm ${mevcutBolum}`;
     cardText.innerHTML = `
         <div class="finish-container">
-            <h3>🎉 Tebrikler!</h3>
+            <h3>Tebrikler!</h3>
             <p>${bolumAdi} tamamlandı!</p>
             <small>Öğrenilen: ${ogrenilenler.length}/${toplamKelime} kelime</small>
             <br>
-            <button type="button" class="btn-restart mt-3">Yeniden Başla</button>
+            <button type="button" class="btn-restart">Yeniden Başla</button>
         </div>
     `;
     const restartBtn = cardText.querySelector('.btn-restart');
