@@ -127,7 +127,7 @@ button {
 .toast-alani {
     position: fixed;
     left: 50%;
-    bottom: 20px;
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 12px);
     transform: translateX(-50%);
     z-index: 1050;
     display: flex;
@@ -168,7 +168,48 @@ button {
 .main {
     max-width: 460px;
     margin: 0 auto;
-    padding: 20px 16px 56px;
+    padding: 20px 16px 96px;
+}
+
+/* ---------- Bottom nav ---------- */
+
+.bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    display: flex;
+    max-width: 460px;
+    margin: 0 auto;
+    background-color: var(--surface);
+    border-top: 1px solid var(--border);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 10px 4px 8px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-top: 2px solid transparent;
+}
+
+.bottom-nav-item[aria-current="page"] {
+    color: var(--rule-red-strong);
+    border-top-color: var(--rule-red-strong);
+}
+
+.bottom-nav-item:active {
+    transform: translateY(1px);
 }
 
 /* ---------- Stat strip ---------- */
@@ -274,9 +315,15 @@ button {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    cursor: pointer;
+    cursor: grab;
     user-select: none;
+    touch-action: pan-y;
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease;
+}
+
+.card.surukleniyor {
+    transition: none;
+    cursor: grabbing;
 }
 
 .card::before {
@@ -330,6 +377,35 @@ button {
 
 .card.flipping {
     animation: cardFlip 0.5s ease-in-out;
+}
+
+.card-stamp {
+    position: absolute;
+    top: 44px;
+    padding: 4px 10px;
+    border: 2px solid;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.card-stamp-yes {
+    left: 46px;
+    color: var(--ok-green);
+    border-color: var(--ok-green);
+    transform: rotate(-14deg);
+}
+
+.card-stamp-no {
+    right: 18px;
+    color: var(--rule-red-strong);
+    border-color: var(--rule-red-strong);
+    transform: rotate(14deg);
 }
 
 @keyframes cardFlip {
@@ -431,6 +507,16 @@ button {
 .chip-ozel {
     border-color: var(--ok-green);
     color: var(--ok-green);
+}
+
+.sections-label-seviye {
+    margin-top: 16px;
+}
+
+.chip-seviye.active {
+    border-color: var(--brass);
+    color: var(--brass);
+    background-color: color-mix(in srgb, var(--brass) 12%, transparent);
 }
 
 /* ---------- Kelime yükle panel ---------- */
@@ -561,6 +647,257 @@ button {
     cursor: pointer;
 }
 
+/* ---------- İstatistik sayfası ---------- */
+
+.istatistik-baslik {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 16px;
+}
+
+.seri-risk-banner {
+    background-color: color-mix(in srgb, var(--rule-red) 14%, transparent);
+    border: 1px solid var(--rule-red);
+    color: var(--rule-red-strong);
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.5;
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+}
+
+.ist-blok {
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-top: 20px;
+}
+
+.ist-blok-baslik {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 4px;
+}
+
+.ist-blok-aciklama {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin: 0 0 12px;
+}
+
+.seviye-ilerleme-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.seviye-ilerleme-ust {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+.seviye-etiket {
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.seviye-sayi {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.seviye-ilerleme-track {
+    height: 8px;
+    border-radius: 4px;
+    background-color: var(--border);
+    overflow: hidden;
+}
+
+.seviye-ilerleme-dolgu {
+    height: 100%;
+    background-color: var(--brass);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.hatirlama-bar {
+    display: flex;
+    height: 14px;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: var(--border);
+    margin-bottom: 10px;
+}
+
+.hatirlama-parca {
+    height: 100%;
+}
+
+.hatirlama-guclu { background-color: var(--ok-green); }
+.hatirlama-orta { background-color: var(--brass); }
+.hatirlama-riskli { background-color: var(--rule-red-strong); }
+.hatirlama-gorulmemis { background-color: var(--muted); }
+
+.hatirlama-lejant {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+}
+
+.hatirlama-lejant-oge {
+    font-size: 12px;
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hatirlama-nokta {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.aktivite-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.aktivite-hucre {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    background-color: var(--border);
+}
+
+.aktivite-hucre[data-seviye="1"] { background-color: color-mix(in srgb, var(--ok-green) 35%, var(--border)); }
+.aktivite-hucre[data-seviye="2"] { background-color: color-mix(in srgb, var(--ok-green) 65%, var(--border)); }
+.aktivite-hucre[data-seviye="3"] { background-color: var(--ok-green); }
+
+.tekrar-yuku-grafik {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 120px;
+}
+
+.tekrar-yuku-sutun {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+.tekrar-yuku-sayi {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 4px;
+}
+
+.tekrar-yuku-cubuk {
+    width: 100%;
+    background-color: var(--rule-red);
+    border-radius: 3px 3px 0 0;
+    min-height: 3px;
+}
+
+.tekrar-yuku-gun {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 6px;
+}
+
+/* ---------- Oyun (eşleştirme) sayfası ---------- */
+
+.oyun-durum-satiri {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 14px 0 18px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.oyun-durum-satiri strong {
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    margin-left: 4px;
+}
+
+.oyun-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.oyun-kart {
+    min-height: 64px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    background-color: var(--surface);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease, opacity 0.3s ease;
+}
+
+.oyun-kart:active {
+    transform: translateY(1px);
+}
+
+.oyun-kart.secili {
+    border-color: var(--brass);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--brass) 40%, transparent);
+}
+
+.oyun-kart.yanlis {
+    border-color: var(--rule-red-strong);
+    background-color: color-mix(in srgb, var(--rule-red) 12%, var(--surface));
+    animation: oyunSallanma 0.4s ease;
+}
+
+.oyun-kart.esti {
+    border-color: var(--ok-green);
+    color: var(--ok-green);
+    opacity: 0.45;
+    cursor: default;
+    box-shadow: none;
+}
+
+@keyframes oyunSallanma {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+.oyun-bos-mesaj {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--muted);
+    padding: 40px 10px;
+}
+
 /* ---------- Desktop: more breathing room, same single-column layout ---------- */
 
 @media (min-width: 640px) {
@@ -577,6 +914,20 @@ button {
         font-size: 2rem;
     }
 
+    .card-stamp {
+        top: 54px;
+        font-size: 1rem;
+        padding: 5px 12px;
+    }
+
+    .card-stamp-yes {
+        left: 54px;
+    }
+
+    .card-stamp-no {
+        right: 26px;
+    }
+
     .stamp-n {
         font-size: 24px;
     }
@@ -590,6 +941,10 @@ button {
     }
 
     .card.flipping {
+        animation: none;
+    }
+
+    .oyun-kart.yanlis {
         animation: none;
     }
 }

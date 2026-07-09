@@ -60,6 +60,8 @@
         <div class="card-wrap">
             <div class="card" id="card">
                 <span class="card-tab" id="card-tab">Bugün</span>
+                <span class="card-stamp card-stamp-yes" id="card-stamp-yes" aria-hidden="true">Biliyorum</span>
+                <span class="card-stamp card-stamp-no" id="card-stamp-no" aria-hidden="true">Bilmiyorum</span>
                 <p class="card-text" id="card_text">Başlamak için bir bölüm seçin</p>
                 <p class="card-pronunciation" id="card_pronunciation"></p>
             </div>
@@ -81,9 +83,11 @@
             <p class="sections-label">Bölüm seçin</p>
             <div class="chips" id="bolum-butonlari-container"></div>
             <div class="chips chips-row2">
-                <button type="button" id="btn-6" class="chip chip-ozel">+ Özel</button>
+                <button type="button" id="btn-ozel" class="chip chip-ozel">+ Özel</button>
                 <button type="button" id="kelime-yukle-btn" class="chip chip-yukle">Kelime Yükle</button>
             </div>
+            <p class="sections-label sections-label-seviye">Seviye seçin</p>
+            <div class="chips" id="seviye-butonlari-container"></div>
         </section>
 
     </main>
@@ -112,6 +116,30 @@
             <button type="button" class="btn-kelime-action btn-kapat" id="btn-kapat">Kapat</button>
         </div>
     </div>
+
+    <nav class="bottom-nav" aria-label="Ana gezinme">
+        <a href="index.html" class="bottom-nav-item" aria-current="page">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="6" y="4" width="14" height="10" rx="2" />
+                <path d="M4 8v10a2 2 0 0 0 2 2h10" />
+            </svg>
+            <span>Kartlar</span>
+        </a>
+        <a href="oyun.html" class="bottom-nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="6" width="8" height="12" rx="1.5" />
+                <rect x="14" y="6" width="8" height="12" rx="1.5" />
+                <path d="M10 12h4" stroke-dasharray="2 2" />
+            </svg>
+            <span>Oyun</span>
+        </a>
+        <a href="istatistik.html" class="bottom-nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 20V10M12 20V4M20 20v-7" />
+            </svg>
+            <span>İstatistik</span>
+        </a>
+    </nav>
 
     <script type="module" src="kelimeKartlari.js"></script>
 

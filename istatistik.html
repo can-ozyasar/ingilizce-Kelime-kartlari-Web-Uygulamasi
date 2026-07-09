@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="kelimeKartlari.css">
+
+    <title>İstatistik — Kelime Kartları</title>
+
+</head>
+
+<body data-theme="light">
+    <header class="topbar">
+        <a class="brand" href="index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                    d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z" />
+            </svg>
+            Kelime Kartları
+        </a>
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Açık/koyu tema değiştir">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="sun-icon"
+                viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                    d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708" />
+            </svg>
+            <span class="toggle-switch" id="toggle-switch"><span class="toggle-slider"></span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="moon-icon"
+                viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                    d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278" />
+            </svg>
+        </button>
+    </header>
+
+    <main class="main">
+
+        <p class="istatistik-baslik">İstatistikler</p>
+
+        <div id="seri-risk-banner" class="seri-risk-banner" hidden>
+            Bugün henüz tekrar yapmadınız — serinizi sürdürmek için birkaç kelime çalışın.
+        </div>
+
+        <div class="stampstrip">
+            <div class="stamp">
+                <span class="stamp-n" id="ist-mevcut-seri">0</span>
+                <span class="stamp-l">Mevcut Seri</span>
+            </div>
+            <div class="stamp brass">
+                <span class="stamp-n" id="ist-en-uzun-seri">0</span>
+                <span class="stamp-l">En Uzun Seri</span>
+            </div>
+            <div class="stamp">
+                <span class="stamp-n" id="ist-toplam-ogrenilen">0</span>
+                <span class="stamp-l">Öğrenilen</span>
+            </div>
+        </div>
+
+        <section class="ist-blok">
+            <h2 class="ist-blok-baslik">Seviyeye Göre İlerleme</h2>
+            <div id="seviye-ilerleme-liste" class="seviye-ilerleme-liste"></div>
+        </section>
+
+        <section class="ist-blok">
+            <h2 class="ist-blok-baslik">Hatırlama Sağlığı</h2>
+            <p class="ist-blok-aciklama">Öğrendiğiniz kelimelerin şu anki tahmini hatırlama olasılığı.</p>
+            <div class="hatirlama-bar" id="hatirlama-bar"></div>
+            <div class="hatirlama-lejant" id="hatirlama-lejant"></div>
+        </section>
+
+        <section class="ist-blok">
+            <h2 class="ist-blok-baslik">Son 5 Hafta</h2>
+            <div class="aktivite-grid" id="aktivite-grid"></div>
+        </section>
+
+        <section class="ist-blok">
+            <h2 class="ist-blok-baslik">Önümüzdeki 7 Gün Tekrar Yükü</h2>
+            <div class="tekrar-yuku-grafik" id="tekrar-yuku-grafik"></div>
+        </section>
+
+    </main>
+
+    <nav class="bottom-nav" aria-label="Ana gezinme">
+        <a href="index.html" class="bottom-nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="6" y="4" width="14" height="10" rx="2" />
+                <path d="M4 8v10a2 2 0 0 0 2 2h10" />
+            </svg>
+            <span>Kartlar</span>
+        </a>
+        <a href="oyun.html" class="bottom-nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="6" width="8" height="12" rx="1.5" />
+                <rect x="14" y="6" width="8" height="12" rx="1.5" />
+                <path d="M10 12h4" stroke-dasharray="2 2" />
+            </svg>
+            <span>Oyun</span>
+        </a>
+        <a href="istatistik.html" class="bottom-nav-item" aria-current="page">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 20V10M12 20V4M20 20v-7" />
+            </svg>
+            <span>İstatistik</span>
+        </a>
+    </nav>
+
+    <script type="module" src="istatistik.js"></script>
+
+</body>
+
+</html>
